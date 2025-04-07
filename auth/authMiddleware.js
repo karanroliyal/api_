@@ -19,8 +19,16 @@ export const decodeToken = (token) => {
   }
 };
 
+// ✅ Helper function to get Authorization header data
+export const getAuthHeader = (req) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) return null;
+  return authHeader.split(' ')[1]; // returns token only
+};
+
 // ✅ Middleware to protect routes
 const authMiddleware = (req, res, next) => {
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith('Bearer ')) {

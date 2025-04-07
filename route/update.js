@@ -8,8 +8,6 @@ router.post('/' , update_validation , validation_result ,  async (req,res)=>{
 
     const { name, email, password, phone, address, state, city, pincode, id } = req.body;
 
-   
-
     const query = "UPDATE pg_owners SET name = ?, email = ?, password = ?, phone = ?, address = ?, state = ?, city = ?, pincode = ? WHERE id = ?";
 
     db.query(query, [name, email, password, phone, address, state, city, pincode, id], (err, result) => {

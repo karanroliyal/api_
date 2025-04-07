@@ -8,7 +8,7 @@ router.post('/', delete_ , validation_result, async (req, res) => {
 
     const { delete_id } = req.body;
 
-    const query = 'Delete from pg_owners where id = ?';
+    const query = 'Delete from rooms where id = ?';
 
     db.query(query, [delete_id], (err, result) => {
 
@@ -17,10 +17,10 @@ router.post('/', delete_ , validation_result, async (req, res) => {
         }
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ status: false, message: 'PG owner not found' });
+            return res.status(404).json({ status: false, message: 'Room not found' });
         }
 
-        return res.status(200).json({ status: true, message: 'PG owner deleted successfully' });
+        return res.status(200).json({ status: true, message: 'Room deleted successfully' });
 
     })
 

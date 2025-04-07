@@ -17,7 +17,7 @@ router.post('/', add_validation , validation_result , async (req, res) => {
             return res.status(500).json({ status: false, data: false, message: err.sqlMessage });
         }
         console.log(result, 'my result');
-        return res.status(201).json({ status: true, data: true, message: 'Data inserted successfully' });
+        return res.status(201).json({ status: true, data: true, message: 'Owner created successfully' });
 
     })
 
