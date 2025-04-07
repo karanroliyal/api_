@@ -141,6 +141,3 @@ export const list_rooms = router.post('/room-list', (req, res) => {
         });
     });
 });
-
-
-

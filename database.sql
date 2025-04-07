@@ -22,10 +22,10 @@ USE `gg`;
 -- Dumping structure for table gg.pg_owners
 CREATE TABLE IF NOT EXISTS `pg_owners` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
+  `name` varchar(30) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `password` varchar(15) DEFAULT NULL,
+  `phone` varchar(10) DEFAULT NULL,
   `address` text DEFAULT NULL,
   `state` int(11) DEFAULT NULL,
   `city` int(11) DEFAULT NULL,
@@ -45,7 +45,7 @@ INSERT INTO `pg_owners` (`id`, `name`, `email`, `password`, `phone`, `address`, 
 CREATE TABLE IF NOT EXISTS `pg_properties` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner_id` int(11) DEFAULT NULL,
-  `name` varchar(30) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
   `location` text DEFAULT NULL,
   `state` int(11) DEFAULT NULL,
   `city` int(11) DEFAULT NULL,
@@ -89,13 +89,13 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `status` enum('Available','Occupied','Under Maintenance') DEFAULT 'Available',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `unique_room_per_property` (`property_id`,`room_number`),
   KEY `property_id` (`property_id`) USING BTREE,
   CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `pg_properties` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table gg.rooms: ~2 rows (approximately)
+-- Dumping data for table gg.rooms: ~1 rows (approximately)
 INSERT INTO `rooms` (`id`, `property_id`, `room_number`, `type`, `status`, `created_at`) VALUES
-	(7, 6, '205', 2, 'Occupied', '2025-04-07 09:23:45'),
 	(14, 6, '101', 2, 'Occupied', '2025-04-07 09:32:32');
 
 -- Dumping structure for table gg.super_admin
