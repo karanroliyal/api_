@@ -19,6 +19,24 @@
 CREATE DATABASE IF NOT EXISTS `gg` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `gg`;
 
+-- Dumping structure for table gg.complaints
+CREATE TABLE IF NOT EXISTS `complaints` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenant_id` int(11) DEFAULT NULL,
+  `pg_id` int(11) DEFAULT NULL,
+  `room_id` int(11) DEFAULT NULL,
+  `category` enum('Food','Water','Wi-Fi','Electricity','Other') DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
+  `status` enum('Pending','In Progress','Resolved') DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `tenant_id` (`tenant_id`) USING BTREE,
+  CONSTRAINT `complaints_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table gg.complaints: ~0 rows (approximately)
+
 -- Dumping structure for table gg.pg_owners
 CREATE TABLE IF NOT EXISTS `pg_owners` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -26,20 +44,25 @@ CREATE TABLE IF NOT EXISTS `pg_owners` (
   `email` varchar(50) DEFAULT NULL,
   `password` varchar(15) DEFAULT NULL,
   `phone` varchar(10) DEFAULT NULL,
+  `profile` varchar(100) DEFAULT NULL,
   `address` text DEFAULT NULL,
   `state` int(11) DEFAULT NULL,
   `city` int(11) DEFAULT NULL,
   `pincode` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `phone` (`phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table gg.pg_owners: ~3 rows (approximately)
-INSERT INTO `pg_owners` (`id`, `name`, `email`, `password`, `phone`, `address`, `state`, `city`, `pincode`, `created_at`) VALUES
-	(6, 'karan rawat', 'karan13@gmail.com', 'K@aran123', '9312293823', '272, jh', 1, 3, 433434, '2025-04-05 07:13:56'),
-	(30, 'karan', 'joker@gmail.com', 'K@aran123', '93122938', '272, jh', 1, 3, 433434, '2025-04-07 06:05:03'),
-	(32, 'karan', '123@gmail.com', 'K@aran123', '9312293823', '272, jh', 1, 3, 433434, '2025-04-07 06:08:33');
+INSERT INTO `pg_owners` (`id`, `name`, `email`, `password`, `phone`, `profile`, `address`, `state`, `city`, `pincode`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
+	(6, 'karan rawat', 'karan13@gmail.com', 'K@aran123', '9312293823', NULL, '272, jh', 1, 3, 433434, '2025-04-05 07:13:56', NULL, NULL, NULL),
+	(30, 'karan', 'joker@gmail.com', 'karan123', '93122938', NULL, '272, jh', 1, 3, 433434, '2025-04-07 06:05:03', '2025-04-07 16:19:27', NULL, NULL),
+	(32, 'karan', '123@gmail.com', 'K@aran123', '9312893823', NULL, '272, jh', 1, 3, 433434, '2025-04-07 06:08:33', NULL, NULL, NULL);
 
 -- Dumping structure for table gg.pg_properties
 CREATE TABLE IF NOT EXISTS `pg_properties` (
@@ -53,14 +76,20 @@ CREATE TABLE IF NOT EXISTS `pg_properties` (
   `total_rooms` int(11) DEFAULT NULL,
   `status` enum('Active','Under Maintenance','Closed') DEFAULT 'Active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_owner_property_name` (`owner_id`,`name`),
   KEY `owner_id` (`owner_id`),
   CONSTRAINT `pg_properties_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `pg_owners` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table gg.pg_properties: ~1 rows (approximately)
-INSERT INTO `pg_properties` (`id`, `owner_id`, `name`, `location`, `state`, `city`, `pincode`, `total_rooms`, `status`, `created_at`) VALUES
-	(6, 6, 'sn', 'sector 69', 1, 2, 201014, 200, 'Active', '2025-04-07 08:25:14');
+-- Dumping data for table gg.pg_properties: ~3 rows (approximately)
+INSERT INTO `pg_properties` (`id`, `owner_id`, `name`, `location`, `state`, `city`, `pincode`, `total_rooms`, `status`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
+	(9, 30, 'Kanak pg', 'gurugram sector 69', 2, 4, 201011, 300, 'Active', '2025-04-07 16:34:38', '2025-04-07 16:44:41', NULL, NULL),
+	(15, 30, 'Royal pg', 'gurugram sector 69', 2, 4, 201011, 300, 'Active', '2025-04-07 16:40:47', NULL, NULL, NULL),
+	(16, 32, 'sn', 'sdjhjkhds', 3, 1, 201014, 50, 'Active', '2025-04-07 17:04:36', '2025-04-07 17:04:43', NULL, NULL);
 
 -- Dumping structure for table gg.rent_transactions
 CREATE TABLE IF NOT EXISTS `rent_transactions` (
@@ -88,15 +117,18 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `type` int(11) DEFAULT NULL,
   `status` enum('Available','Occupied','Under Maintenance') DEFAULT 'Available',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `unique_room_per_property` (`property_id`,`room_number`),
   KEY `property_id` (`property_id`) USING BTREE,
   CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `pg_properties` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table gg.rooms: ~1 rows (approximately)
-INSERT INTO `rooms` (`id`, `property_id`, `room_number`, `type`, `status`, `created_at`) VALUES
-	(14, 6, '101', 2, 'Occupied', '2025-04-07 09:32:32');
+INSERT INTO `rooms` (`id`, `property_id`, `room_number`, `type`, `status`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
+	(19, 9, '205', 4, 'Available', '2025-04-07 17:05:16', NULL, NULL, NULL);
 
 -- Dumping structure for table gg.super_admin
 CREATE TABLE IF NOT EXISTS `super_admin` (
@@ -106,13 +138,17 @@ CREATE TABLE IF NOT EXISTS `super_admin` (
   `password` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `phone` (`phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table gg.super_admin: ~1 rows (approximately)
-INSERT INTO `super_admin` (`id`, `name`, `email`, `password`, `phone`, `created_at`) VALUES
-	(1, 'karan', 'karan@gmail.com', 'karan123', '8368145192', '2025-04-05 05:59:07');
+INSERT INTO `super_admin` (`id`, `name`, `email`, `password`, `phone`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
+	(1, 'karan', 'karan@gmail.com', 'karan123', '8368145192', '2025-04-05 05:59:07', NULL, NULL, NULL);
 
 -- Dumping structure for table gg.tenants
 CREATE TABLE IF NOT EXISTS `tenants` (

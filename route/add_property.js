@@ -12,8 +12,23 @@ router.post('/' , add_property , validation_result , async (req , res)=>{
 
     const { name , location , state , city , pincode , total_rooms , status} = req.body;
 
-    const query = 'Insert into pg_properties(owner_id, name, location, state, city, pincode, total_rooms, status)';
+    const query = 'Insert into pg_properties(owner_id, name, location, state, city, pincode, total_rooms, status) values(?, ?, ?, ?, ?, ?, ?, ?)';
+
+    db.query(query , [owner_data.id , name , location , state , city , pincode , total_rooms , status] , (err , result)=>{
+
+        if(err){
+            if(err.errno == 1062){
+                return res.status(500).json({ status: false, data: false, message: "Name already exists for your pg property" });
+            }
+            return res.status(500).json({ status: false, data: false, message: err });
+        }
+
+        return res.status(201).json({ status: true, data: true, message: 'Pg property created successfully' });
+
+    })
 
 })
 
 export default router;
+
+

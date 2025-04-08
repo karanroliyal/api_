@@ -141,3 +141,71 @@ export const list_rooms = router.post('/room-list', (req, res) => {
         });
     });
 });
+
+export const list_property = router.post('/property-list', (req, res) => {
+    const {
+        page = 1,
+        limit = 10,
+        sortBy = 'id',
+        order = 'DESC',
+        name,
+        status,
+        total_rooms
+    } = req.body;
+
+    const offset = (page - 1) * limit;
+
+    // Build filter query
+    let filterQuery = 'WHERE 1=1';
+    const filterParams = [];
+
+    if (status) {
+        filterQuery += ' AND status = ?';
+        filterParams.push(status);
+    }
+
+    if (name) {
+        filterQuery += ' AND name = ?';
+        filterParams.push(name);
+    }
+
+    if (total_rooms) {
+        filterQuery += ' AND total_rooms = ?';
+        filterParams.push(total_rooms);
+    }
+
+    // Get total records first
+    const countQuery = `SELECT COUNT(*) as total FROM pg_properties ${filterQuery}`;
+
+    db.query(countQuery, filterParams, (err, countResult) => {
+        if (err) {
+            return res.status(500).json({ status: false, message: err.sqlMessage });
+        }
+
+        const totalRecords = countResult[0].total;
+        const totalPages = Math.ceil(totalRecords / limit);
+
+        // Fetch paginated results
+        const dataQuery = `SELECT * FROM pg_properties ${filterQuery} ORDER BY ${sortBy} ${order} LIMIT ? OFFSET ?`;
+        const dataParams = [...filterParams, parseInt(limit), parseInt(offset)];
+
+        db.query(dataQuery, dataParams, (err, result) => {
+            if (err) {
+                return res.status(500).json({ status: false, message: err.sqlMessage });
+            }
+
+            return res.status(200).json({
+                status: true,
+                data: result,
+                message: 'Rooms list fetched successfully',
+                pagination: {
+                    currentPage: parseInt(page),
+                    limit: parseInt(limit),
+                    totalRecords,
+                    totalPages
+                },
+                query: dataQuery
+            });
+        });
+    });
+});
