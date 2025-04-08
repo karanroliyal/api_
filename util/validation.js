@@ -67,3 +67,52 @@ export const update_property = [
     body("total_rooms").notEmpty().withMessage('Total rooms is required').matches(/^[0-9]+$/).withMessage("Only number is allowed in total rooms"),
     body("status").matches(/^(Active|Under Maintenance|Closed)$/).withMessage('Property status is invalid')
 ]
+
+export const add_tenant = [
+    body('name').notEmpty().withMessage('Tenant name is required').matches(/^[A-Za-z ]+$/).withMessage('Tenant name only includes characters').isLength({ min: 3, max: 30 }).withMessage('Tenant name must be between 3 and 40 characters long'),
+    body('phone').notEmpty().withMessage('Phone number is required').matches(/^[0-9]{10}$/).withMessage('Phone must be 10 digits only'),
+    body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Email is invalid'),
+    body('aadhar').notEmpty().withMessage('Aadhar is required').isBase64().withMessage('Please send a valid format of aadhar card (base64)'),
+    body('pan').notEmpty().withMessage('Pan is required').isBase64().withMessage('Please send a valid format of pan card (base64)'),
+    body('parent_contact').notEmpty().withMessage('Parent number is required').matches(/^[0-9]{10}$/).withMessage('Parent number must be 10 digits only'),
+    body('emergency_contact').notEmpty().withMessage('Emergency number is required').matches(/^[0-9]{10}$/).withMessage('Emergency number must be 10 digits only'),
+    body('move_in_date').notEmpty().withMessage('Move in date is required').isDate({
+        format: 'YYYY-MM-DD',
+        delimiters: ['-'],
+        strictMode: true,
+      }).withMessage('Move in date Is invalid'),
+    body('rent_due_date').notEmpty().withMessage('Rent due date is required').isDate({
+        format: 'YYYY-MM-DD',
+        delimiters: ['-'],
+        strictMode: true,
+      }).withMessage('Rent due date is invalid'),
+    body('profile_photo').notEmpty().withMessage('Profile photo is required').isBase64().withMessage('Profile photo format is invalid'),
+    body('rent_status').notEmpty().withMessage('Rent status is required').matches(/^(Paid|Pending)$/).withMessage('Rent status is invalid'),
+
+
+]
+
+
+export const update_tenant = [
+    body('id').notEmpty().withMessage('Id is required '),
+    body('name').notEmpty().withMessage('Tenant name is required').matches(/^[A-Za-z ]+$/).withMessage('Tenant name only includes characters').isLength({ min: 3, max: 30 }).withMessage('Tenant name must be between 3 and 40 characters long'),
+    body('phone').notEmpty().withMessage('Phone number is required').matches(/^[0-9]{10}$/).withMessage('Phone must be 10 digits only'),
+    body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Email is invalid'),
+    body('aadhar').notEmpty().withMessage('Aadhar is required').isBase64().withMessage('Please send a valid format of aadhar card (base64)'),
+    body('pan').notEmpty().withMessage('Pan is required').isBase64().withMessage('Please send a valid format of pan card (base64)'),
+    body('parent_contact').notEmpty().withMessage('Parent number is required').matches(/^[0-9]{10}$/).withMessage('Parent number must be 10 digits only'),
+    body('emergency_contact').notEmpty().withMessage('Emergency number is required').matches(/^[0-9]{10}$/).withMessage('Emergency number must be 10 digits only'),
+    body('move_in_date').notEmpty().withMessage('Move in date is required').isDate({
+        format: 'YYYY-MM-DD',
+        delimiters: ['-'],
+        strictMode: true,
+      }).withMessage('Move in date Is invalid'),
+    body('rent_due_date').notEmpty().withMessage('Rent due date is required').isDate({
+        format: 'YYYY-MM-DD',
+        delimiters: ['-'],
+        strictMode: true,
+      }).withMessage('Rent due date is invalid'),
+    body('profile_photo').notEmpty().withMessage('Profile photo is required').isBase64().withMessage('Profile photo format is invalid'),
+    body('rent_status').notEmpty().withMessage('Rent status is required').matches(/^(Paid|Pending)$/).withMessage('Rent status is invalid'),
+
+]
