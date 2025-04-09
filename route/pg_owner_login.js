@@ -22,7 +22,6 @@ router.post('/',
 
         const { email, password } = req.body;
 
-
         const query = 'Select * from pg_owners where email = ? and password = ?';
 
         db.query(query, [email, password], (err, result) => {

@@ -1,0 +1,70 @@
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  imports: [ReactiveFormsModule],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+export class AppComponent {
+  uploadedFiles: any;
+
+  constructor(private http: HttpClient) {
+    localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwibmFtZSI6ImthcmFuIHJhd2F0IiwiZW1haWwiOiJrYXJhbjEzQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiS0BhcmFuMTIzIiwicGhvbmUiOiI5MzEyMjkzODIzIiwicHJvZmlsZSI6bnVsbCwiYWRkcmVzcyI6IjI3MiwgamgiLCJzdGF0ZSI6MSwiY2l0eSI6MywicGluY29kZSI6NDMzNDM0LCJjcmVhdGVkX2F0IjoiMjAyNS0wNC0wNVQwNzoxMzo1Ni4wMDBaIiwidXBkYXRlZF9hdCI6bnVsbCwiY3JlYXRlZF9ieSI6bnVsbCwidXBkYXRlZF9ieSI6bnVsbCwiaWF0IjoxNzQ0MTc0MDY1LCJleHAiOjE3NDQ1MTk2NjV9.j8-Yhqomcm8Lm2RmUvycXRMMPSmj73Wd88mTPB7Ardk')
+  }
+
+  title = 'angular-form';
+
+
+  imageForm = new FormGroup({
+    phone: new FormControl(''),
+    name: new FormControl(''),
+    email: new FormControl(''),
+    aadhar: new FormControl(''),
+    pan: new FormControl(''),
+    profile_photo: new FormControl(''),
+    parent_contact: new FormControl(''),
+    emergency_contact: new FormControl(''),
+    rent_status: new FormControl(''),
+    rent_due_date: new FormControl(''),
+    move_in_date: new FormControl(''),
+  })
+
+  file: any;
+
+  // In your component class
+  aadharFile: any;
+  profileFile: any;
+  panCardFile: any; // Add more as needed
+
+  fileUpload(event: any, fieldName: string) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Convert file to base64
+      reader.onload = () => {
+        (this as any)[fieldName] = reader.result; // Dynamically assign to correct variable
+      };
+    }
+  }
+
+
+
+  sendImage() {
+
+    const formData = {
+      ...this.imageForm.value,
+      aadhar: this.aadharFile,
+      profile_photo: this.profileFile,
+      pan: this.panCardFile
+    };
+    //  return console.log(localStorage.getItem('token') , '   token')
+    this.http.post('http://localhost:3000/add-tenant', formData).subscribe((res: any) => {
+      console.log('Response:', res)
+    });
+
+  }
+
+}

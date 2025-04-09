@@ -19,8 +19,10 @@ import delete_tenant from './route/delete_tenant.js'
 
 const app = express();
 const port = 3000;
+
+// Increase payload size limit (e.g., 50mb)
+app.use(express.json({ limit: '50mb' }));
 app.use(CORS);
-app.use(express.json());
 
 app.use('/pg-login',pg_owner_login);
 app.use('/admin-login',admin_login);

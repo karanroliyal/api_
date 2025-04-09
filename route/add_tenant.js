@@ -6,7 +6,7 @@ import upload from '../middleware/uploads.js'
 import { getAuthHeader, decodeToken } from '../auth/authMiddleware.js';
 const router = express.Router();
 
-router.post('/', add_tenant, validation_result, async (req, res) => {
+router.post('/', add_tenant, validation_result, upload, async (req, res) => {
 
     const token = getAuthHeader(req);
     const owner_data = decodeToken(token);
@@ -35,7 +35,7 @@ export default router;
 //     "email":"dheeraj@gmail.com",
 //     "aadhar":"879789844",
 //     "pan":"785425454",
-//     "parent_number":"8368145192",
+//     "parent_contact":"8368145192",
 //     "name":"dheeraj",
 //     "emergency_contact":"787545467",
 //     "profile_photo":"98263763257632",

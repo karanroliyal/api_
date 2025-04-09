@@ -91,6 +91,25 @@ INSERT INTO `pg_properties` (`id`, `owner_id`, `name`, `location`, `state`, `cit
 	(15, 30, 'Royal pg', 'gurugram sector 69', 2, 4, 201011, 300, 'Active', '2025-04-07 16:40:47', NULL, NULL, NULL),
 	(16, 32, 'sn', 'sdjhjkhds', 3, 1, 201014, 50, 'Active', '2025-04-07 17:04:36', '2025-04-07 17:04:43', NULL, NULL);
 
+-- Dumping structure for table gg.plan
+CREATE TABLE IF NOT EXISTS `plan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plan_name` varchar(20) DEFAULT NULL,
+  `total_property` int(11) DEFAULT NULL,
+  `total_rooms` int(11) DEFAULT NULL,
+  `total_tenant` int(11) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `plan_name` (`plan_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table gg.plan: ~4 rows (approximately)
+INSERT INTO `plan` (`id`, `plan_name`, `total_property`, `total_rooms`, `total_tenant`, `price`) VALUES
+	(1, 'Basic', 1, 100, 150, NULL),
+	(2, 'Silver', 2, 300, 500, NULL),
+	(3, 'Gold', 4, 500, 1000, NULL),
+	(4, 'Diamond', 6, 1000, 2000, NULL);
+
 -- Dumping structure for table gg.rent_transactions
 CREATE TABLE IF NOT EXISTS `rent_transactions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -126,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `pg_properties` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table gg.rooms: ~1 rows (approximately)
+-- Dumping data for table gg.rooms: ~0 rows (approximately)
 INSERT INTO `rooms` (`id`, `property_id`, `room_number`, `type`, `status`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
 	(19, 9, '205', 4, 'Available', '2025-04-07 17:05:16', NULL, NULL, NULL);
 
@@ -146,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `super_admin` (
   UNIQUE KEY `phone` (`phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table gg.super_admin: ~1 rows (approximately)
+-- Dumping data for table gg.super_admin: ~0 rows (approximately)
 INSERT INTO `super_admin` (`id`, `name`, `email`, `password`, `phone`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
 	(1, 'karan', 'karan@gmail.com', 'karan123', '8368145192', '2025-04-05 05:59:07', NULL, NULL, NULL);
 
@@ -178,9 +197,14 @@ CREATE TABLE IF NOT EXISTS `tenants` (
   CONSTRAINT `tenants_ibfk_1` FOREIGN KEY (`pg_id`) REFERENCES `pg_properties` (`id`) ON DELETE CASCADE,
   CONSTRAINT `tenants_ibfk_2` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE SET NULL,
   CONSTRAINT `tenants_ibfk_3` FOREIGN KEY (`owner_id`) REFERENCES `pg_owners` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table gg.tenants: ~0 rows (approximately)
+-- Dumping data for table gg.tenants: ~4 rows (approximately)
+INSERT INTO `tenants` (`id`, `pg_id`, `room_id`, `owner_id`, `name`, `phone`, `email`, `password`, `aadhar`, `pan`, `parent_contact`, `emergency_contact`, `move_in_date`, `rent_due_date`, `profile_photo`, `rent_status`, `created_at`) VALUES
+	(4, NULL, NULL, 6, 'harsh singh', '9463847364', 'harsh@gmail.com', NULL, '2025174417641218918952.png', 'kguy98584y5ureyrey5785', '8437489734', '8978643784', '2025-04-18', '2025-04-23', 'gyuyudt8478439sb', 'Pending', '2025-04-09 05:26:52'),
+	(6, NULL, NULL, 6, 'shivam sign', '5848546586', 'shivam@gmail.com', NULL, '2025174417680495795724.svg+xml', 'kguy98584y5ureyrey5785', '8437438263', '8976436597', '2025-05-01', '2025-04-08', 'gyuyudt8478439sb', 'Pending', '2025-04-09 05:33:24'),
+	(7, NULL, NULL, 6, 'Gaurav ', '9879879879', 'gaurav@gmail.com', NULL, '2025174417699545245235.svg+xml', '83y3hdg347t6223', '9832736287', '6275217528', '2025-04-29', '2025-04-18', 'JGUYt32t7325wfyq', 'Paid', '2025-04-09 05:36:35'),
+	(10, NULL, NULL, 6, 'saurav', '7987453135', 'saurav@gmail.com', NULL, '20251744178268198198484.jpeg', '83y3hdg347t6223', '9832736287', '7898765465', '2025-04-29', '2025-04-18', 'JGUYt32t7325wfyq', 'Paid', '2025-04-09 05:57:48');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

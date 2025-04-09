@@ -24,12 +24,9 @@ export const update_validation =  [
     body("id").notEmpty().withMessage('id is required'),
 ];
 
-
 export const delete_ = [
     body("delete_id").notEmpty().withMessage('Delete id is required'),
 ]
-
-
 
 export const add_room = [
     body("property_id").notEmpty().withMessage('Property id is required'),
@@ -45,7 +42,6 @@ export const update_room = [
     body("type").notEmpty().withMessage('Room type is required').matches(/^[0-9]+$/).withMessage('Room type is invalid'),
     body("status").notEmpty().withMessage('Room status is required').matches(/^(Available|Occupied|Under Maintenance)$/).withMessage('Room status is invalid')
 ]
-
 
 export const add_property = [
     body("name").notEmpty().withMessage('Property name is required').matches(/^[A-Za-z ]+$/).withMessage('Property name only includes characters').isLength({ min: 3, max: 40 }).withMessage('Property name must be between 3 and 40 characters long'),
@@ -72,10 +68,11 @@ export const add_tenant = [
     body('name').notEmpty().withMessage('Tenant name is required').matches(/^[A-Za-z ]+$/).withMessage('Tenant name only includes characters').isLength({ min: 3, max: 30 }).withMessage('Tenant name must be between 3 and 40 characters long'),
     body('phone').notEmpty().withMessage('Phone number is required').matches(/^[0-9]{10}$/).withMessage('Phone must be 10 digits only'),
     body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Email is invalid'),
-    body('aadhar').notEmpty().withMessage('Aadhar is required').isBase64().withMessage('Please send a valid format of aadhar card (base64)'),
-    body('pan').notEmpty().withMessage('Pan is required').isBase64().withMessage('Please send a valid format of pan card (base64)'),
+    body('aadhar').notEmpty().withMessage('Aadhar is required').matches(/^data:(.+);base64,(.+)$/).withMessage('Please send a valid format of aadhar card (base64)'),
+    body('pan').notEmpty().withMessage('Pan is required').matches(/^data:(.+);base64,(.+)$/).withMessage('Please send a valid format of pan card (base64)'),
     body('parent_contact').notEmpty().withMessage('Parent number is required').matches(/^[0-9]{10}$/).withMessage('Parent number must be 10 digits only'),
     body('emergency_contact').notEmpty().withMessage('Emergency number is required').matches(/^[0-9]{10}$/).withMessage('Emergency number must be 10 digits only'),
+    body("password").notEmpty().withMessage('Password is required').isStrongPassword().withMessage('Password must be 8-15 chars with A-Z, a-z, 0-9 & special char'),
     body('move_in_date').notEmpty().withMessage('Move in date is required').isDate({
         format: 'YYYY-MM-DD',
         delimiters: ['-'],
@@ -86,22 +83,21 @@ export const add_tenant = [
         delimiters: ['-'],
         strictMode: true,
       }).withMessage('Rent due date is invalid'),
-    body('profile_photo').notEmpty().withMessage('Profile photo is required').isBase64().withMessage('Profile photo format is invalid'),
+    body('profile_photo').notEmpty().withMessage('Profile photo is required').matches(/^data:(.+);base64,(.+)$/).withMessage('Profile photo format is invalid'),
     body('rent_status').notEmpty().withMessage('Rent status is required').matches(/^(Paid|Pending)$/).withMessage('Rent status is invalid'),
 
-
 ]
-
 
 export const update_tenant = [
     body('id').notEmpty().withMessage('Id is required '),
     body('name').notEmpty().withMessage('Tenant name is required').matches(/^[A-Za-z ]+$/).withMessage('Tenant name only includes characters').isLength({ min: 3, max: 30 }).withMessage('Tenant name must be between 3 and 40 characters long'),
     body('phone').notEmpty().withMessage('Phone number is required').matches(/^[0-9]{10}$/).withMessage('Phone must be 10 digits only'),
     body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Email is invalid'),
-    body('aadhar').notEmpty().withMessage('Aadhar is required').isBase64().withMessage('Please send a valid format of aadhar card (base64)'),
-    body('pan').notEmpty().withMessage('Pan is required').isBase64().withMessage('Please send a valid format of pan card (base64)'),
+    body('aadhar').notEmpty().withMessage('Aadhar is required').matches(/^data:(.+);base64,(.+)$/).withMessage('Please send a valid format of aadhar card (base64)'),
+    body('pan').notEmpty().withMessage('Pan is required').matches(/^data:(.+);base64,(.+)$/).withMessage('Please send a valid format of pan card (base64)'),
     body('parent_contact').notEmpty().withMessage('Parent number is required').matches(/^[0-9]{10}$/).withMessage('Parent number must be 10 digits only'),
     body('emergency_contact').notEmpty().withMessage('Emergency number is required').matches(/^[0-9]{10}$/).withMessage('Emergency number must be 10 digits only'),
+    body("password").notEmpty().withMessage('Password is required').isStrongPassword().withMessage('Password must be 8-15 chars with A-Z, a-z, 0-9 & special char'),
     body('move_in_date').notEmpty().withMessage('Move in date is required').isDate({
         format: 'YYYY-MM-DD',
         delimiters: ['-'],
@@ -112,7 +108,6 @@ export const update_tenant = [
         delimiters: ['-'],
         strictMode: true,
       }).withMessage('Rent due date is invalid'),
-    body('profile_photo').notEmpty().withMessage('Profile photo is required').isBase64().withMessage('Profile photo format is invalid'),
+    body('profile_photo').notEmpty().withMessage('Profile photo is required').matches(/^data:(.+);base64,(.+)$/).withMessage('Profile photo format is invalid'),
     body('rent_status').notEmpty().withMessage('Rent status is required').matches(/^(Paid|Pending)$/).withMessage('Rent status is invalid'),
-
 ]

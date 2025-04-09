@@ -21,8 +21,6 @@ router.post('/',
         }
 
         const { email, password } = req.body;
-
-
         const query = 'Select * from super_admin where email = ? and password = ?';
 
         db.query(query, [email, password], (err, result) => {
@@ -36,7 +34,6 @@ router.post('/',
                 return res.status(404).json({ success: false, data: false, message: 'Invalid email or password' });
             }
         })
-
     })
 
 export default router;
