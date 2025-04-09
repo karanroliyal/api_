@@ -2,6 +2,7 @@ import express from 'express';
 import db from '../util/database.js';
 import { add_tenant } from '../util/validation.js'
 import validation_result from '../middleware/show_validation.js'
+import upload from '../middleware/uploads.js'
 import { getAuthHeader, decodeToken } from '../auth/authMiddleware.js';
 const router = express.Router();
 
