@@ -11,17 +11,20 @@ router.post('/', add_tenant, validation_result, upload, async (req, res) => {
     const token = getAuthHeader(req);
     const owner_data = decodeToken(token);
 
-    const { name, phone, email, password, move_in_date, rent_due_date, profile_photo, aadhar, pan, parent_contact, emergency_contact, rent_status, pg_id, room_id } = req.body;
+    const {name, phone, email, password, move_in_date, rent_due_date, profile_photo, aadhar, pan, parent_contact, emergency_contact, rent_status, pg_id, room_id } = req.body;
 
     const query = "Insert into tenants( owner_id, name, phone, email, password, move_in_date, rent_due_date, profile_photo, aadhar, pan, parent_contact, emergency_contact, rent_status, pg_id, room_id ) values (?, ?, ? , ? ,? , ? , ? , ? , ? , ? , ? , ? , ? ,? ,? )";
 
     db.query( query , [owner_data.id , name, phone, email, password, move_in_date, rent_due_date, profile_photo, aadhar, pan, parent_contact, emergency_contact, rent_status, pg_id, room_id] , (err,result)=>{
 
         if(err){
-            return res.status(500).json({status:false , data:false , message:err});
+            if(err.errno == 1452){
+                return res.status(500).json({status:false , data:err , message:"Pg or room not found"});
+            }
+            return res.status(500).json({status:false , data:err , message:err.sqlMessage});
         }
-
-        return res.status(201).json({status:true , data:true , message:"Tenant created successfully"});
+        
+        return res.status(201).json({status:true , message:"Tenant created successfully"});
 
     })
 
@@ -30,7 +33,8 @@ router.post('/', add_tenant, validation_result, upload, async (req, res) => {
 export default router;
 
 
-// request_body = {
+// request_body = 
+// {
 //     "phone":8368145192,
 //     "email":"dheeraj@gmail.com",
 //     "aadhar":"879789844",

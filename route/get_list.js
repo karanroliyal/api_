@@ -268,23 +268,23 @@ export const list_tenant = router.post('/tenant-list', (req, res) => {
     
 
     // Get total records first
-    const countQuery = `SELECT COUNT(*) as total FROM pg_properties ${filterQuery}`;
+    const countQuery = `SELECT COUNT(*) as total FROM tenants ${filterQuery}`;
 
     db.query(countQuery, filterParams, (err, countResult) => {
         if (err) {
-            return res.status(500).json({ status: false, message: err.sqlMessage });
+            return res.status(500).json({ status: false, message: err });
         }
 
         const totalRecords = countResult[0].total;
         const totalPages = Math.ceil(totalRecords / limit);
 
         // Fetch paginated results
-        const dataQuery = `SELECT * FROM pg_properties ${filterQuery} ORDER BY ${sortBy} ${order} LIMIT ? OFFSET ?`;
+        const dataQuery = `SELECT * FROM tenants ${filterQuery} ORDER BY ${sortBy} ${order} LIMIT ? OFFSET ?`;
         const dataParams = [...filterParams, parseInt(limit), parseInt(offset)];
 
         db.query(dataQuery, dataParams, (err, result) => {
             if (err) {
-                return res.status(500).json({ status: false, message: err.sqlMessage });
+                return res.status(500).json({ status: false, message: err });
             }
 
             return res.status(200).json({
